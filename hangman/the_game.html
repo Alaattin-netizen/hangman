@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Hangman </title>
+<style>
+.container {
+  display: grid;
+  grid-template-areas:
+    "hanged_man guess"
+    "user_input user_input";
+  grid-template-rows: 3fr 2fr;
+grid-template-columns: 1fr 3fr;
+  gap: 40px;
+  background-color: #3D2C20;
+  padding: 40px;
+  height: 100vh;
+}
+.container > div {
+  background-color: #94623A;
+  padding: 10px;
+}
+.container > div.hanged_man {
+padding: 0px;
+  grid-area: hanged_man;
+display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+.container > div.hanged_man img {
+    max-width: 100%;
+  max-height: 100%;
+  object-fit: fill;
+}
+.container > div.guess {
+  grid-area:guess;
+ font-size:100px;
+text-align:center;
+ letter-spacing: 50px;
+}
+.container > div.user_input {
+  grid-area: user_input;
+}
+
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.keyboard button {
+  padding: 10px 50px;
+  font-size: 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  opacity: 1.0;
+}
+
+.keyboard button:hover {
+  opacity: 0.7;
+padding: 15px 80px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+	<div class="hanged_man">
+	 <img id="hanged_man" src="hanged_man5.jpg" alt="hanged_man_5" />
+	</div>
+	<div class="guess"></div>
+	<div class="user_input">
+  <div class="keyboard">
+    <div class="row">
+      <button>A</button>
+      <button>B</button>
+      <button>C</button>
+      <button>D</button>
+      <button>E</button>
+      <button>F</button>
+      <button>G</button>
+    </div>
+    <div class="row">
+      <button>H</button>
+      <button>I</button>
+      <button>J</button>
+      <button>K</button>
+      <button>L</button>
+      <button>M</button>
+      <button>N</button>
+    </div>
+    <div class="row">
+      <button>O</button>
+      <button>P</button>
+      <button>Q</button>
+      <button>R</button>
+      <button>S</button>
+      <button>T</button>
+    </div>
+    <div class="row">
+      <button>U</button>
+      <button>V</button>
+      <button>W</button>
+      <button>X</button>
+      <button>Y</button>
+      <button>Z</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+
+let text = `{
+  "words_list": [
+    { "word": "apple" },
+    { "word": "ball" },
+    { "word": "agony" },
+    { "word": "death" },
+    { "word": "pear" },
+    { "word": "bungee jumping" },
+    { "word": "call" },
+    { "word": "cinnamon" },
+    { "word": "river" },
+    { "word": "deicide" },
+    { "word": "sacrifice" },
+    { "word": "promise" },
+    { "word": "signal" },
+    { "word": "boss" }
+  ]
+}`;
+
+const jsonF = JSON.parse(text);
+const words = jsonF.words_list;
+const answer = words[Math.floor(Math.random() * words.length)].word.replace(" ", "");
+startGame(answer);
+
+function startGame(answer){
+let remainingGuesses = 5;
+let currentLetters = [];
+let correctLetters = answer.split("");
+
+const guessDiv = document.querySelector('.guess');
+
+// initialize underscores
+for (let i = 0; i < answer.length; i++) {
+  currentLetters.push("_");
+}
+updateTable();
+
+// add button listeners
+var buttons = document.querySelectorAll(".keyboard button");
+buttons.forEach(function(button) {
+  button.addEventListener("click", function(event) {
+    let letter = event.target.textContent.toLowerCase(); // match lowercase in answer
+    this.disabled = true;        
+    this.style.opacity = 0.5;  
+    handleGuess(letter);
+  });
+});
+
+// update guess display
+function updateTable() {
+  guessDiv.textContent = currentLetters.join(" ");
+}
+
+// handle guesses
+function handleGuess(letter) {
+  let found = false;
+  for (let i = 0; i < answer.length; i++) {
+    if (correctLetters[i] === letter) {
+      currentLetters[i] = letter;
+      found = true;
+    }
+  }
+  if (!found) {
+    remainingGuesses--;
+    let nextImgSrc = "hanged_man" + remainingGuesses + ".jpg";
+    document.getElementById("hanged_man").src=nextImgSrc;
+    if(remainingGuesses==0){
+	gameEnd("LOST!");
+	}
+  }
+  let allRevealed = true;
+  for (let i = 0; i < answer.length; i++) {
+    if (correctLetters[i] !== currentLetters[i]) {
+      allRevealed = false;
+      break;
+    }
+  }
+  if (allRevealed) {
+    gameEnd("WON!");
+  }
+
+   
+  updateTable();
+}
+
+function gameEnd(victory) {
+  if (confirm("YOU " + victory + "!\nPlay again?")) {
+    location.reload();
+  }
+ else{
+  buttons.forEach(function(button) {
+    button.disabled = true;        
+    button.style.opacity = 0.5;    
+});
+			
+}
+}
+
+}
+
+
+
+</script>
+</body>
+</html>

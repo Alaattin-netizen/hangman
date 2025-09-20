@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>hangman</title>
+<style>
+body {
+  background-image: url('hangman menu.jpg');
+  background-repeat: no-repeat;
+background-attachment: fixed;
+background-size: 100% 100%;
+ 
+}
+div.menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+  
+.button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+background-image: url('board.jpg');
+  border: none;
+  box-shadow: 0 9px #4F3B1F;
+}
+
+.button:hover {
+padding: 20px 30px;
+font-size: 30px;
+}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #21180D;
+  transform: translateY(4px);
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="menu">
+<button class="button" onclick="document.location='the_game.html'">PLAY</button>
+</div>
+
+
+
+
+
+</body>
+</html>
